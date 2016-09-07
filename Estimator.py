@@ -9,6 +9,7 @@ import bpy
 import bmesh
 from bpy.types import Operator
 
+
 # globals---------------------------------------
 
 global boards
@@ -17,10 +18,6 @@ global boardLengths
 boardLengths = []
 global boardNames
 boardNames = []
-
-boards.clear()
-boardLengths.clear()
-boardNames.clear()
 
 
 def get_board_lengths (self, context):
@@ -56,20 +53,23 @@ def get_board_lengths (self, context):
        for edge in bm.edges:
            # test bm.edges[] and calc_length are correct
            #print(edge.calc_length())
-           edges.append(edge.calc_length())
+           unitScale = 3.2810409
+           if bpy.context.scene.unit_settings.system == "IMPERIAL":
+               edges.append(edge.calc_length() * unitScale)
+
+           if bpy.context.scene.unit_settings.system == "METRIC" or "NONE":
+               edges.append(edge.calc_length())
 
        # test edges is populated correctly
-       for e in edges:
-         print (e)
-
-       bmesh.types.BMesh.free
+       # for e in edges:
+       # print (e)
 
        longest_edge = max(edges)
        boardLengths.append(longest_edge)
 
        bpy.ops.object.mode_set(mode='OBJECT')
        bpy.data.objects[name].select = False
-
+       bmesh.types.BMesh.free
 
 # makes add mesh code accessible as a button------------------------------
 
